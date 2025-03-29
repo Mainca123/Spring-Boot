@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang sinh viên của Chính</title>
+    <style>
+        .add-student-btn{
+            position:absolute;
+            top: 45px;
+            right: 210px;
+            height: 40px;
+            background-color: rgb(0, 255, 106);
+            border: 1.8px solid rgb(42, 36, 219);
+            border-radius: 10px;
+            color: rgb(50, 5, 252);
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .add-student-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .delete-student-btn {
+            position: absolute;
+            top: 45px;
+            right: 120px;
+            height: 40px;
+            background-color: rgb(255, 0, 0);
+            border: 1.8px solid rgb(5, 2, 2);
+            border-radius:10px ;
+            color: aliceblue;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .delete-student-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .set-student-btn {
+            position: absolute;
+            top: 45px;
+            right: 60px;
+            height: 40px;
+            background-color: rgb(0, 102, 255);
+            border: 1.8px solid rgb(5, 2, 2);
+            border-radius:10px ;
+            color: aliceblue;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .set-student-btn:hover {
+            transform: scale(1.1);
+        }
+
+        table {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 98%;
+            border-collapse: collapse;
+        }
+        th ,td {
+            padding: 15px;
+            text-align: left;
+            background-color: rgb(242, 242, 242);
+        }
+        .th1 {
+            padding: 15px;
+            background-color: rgb(159, 159, 159);
+        }
+
+        #addStudent {
+            display: none;
+            margin-top: 20px;
+        }
+
+        dialog {
+            width: 350px;
+            height: 500px;
+            padding: 20px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        dialog::backdrop {
+            background: rgba(200, 143, 143, 0.4);
+        }
+        dialog div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tableAdd {
+            top: 60px;
+            width: 150px;
+            margin-top: 10px;
+        }
+
+        .inputAdd {
+            width: 300px;
+            padding: 9px;
+            border: 0px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .addButton {
+            bottom: 10px;
+            height: 40px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .addButton {
+            height: 40px;
+            width: 55px;
+            background-color: #28a745;
+            color: white;
+            font-size: 15px;
+            border-radius: 10px;
+            transition: 0.3s;
+
+        }
+
+        .addButton:hover {
+            transform: scale(1.1);
+        }
+
+        .addButton:last-child {
+            background-color: #dc3545;
+            color: white;
+        }
+        .CloseButton {
+            bottom: 10px;
+            left: 100px;
+            height: 40px;
+            width: 55px;
+            background-color: rgb(255, 0, 0);
+            border: 0px solid rgb(5, 2, 2);
+            border-radius:10px ;
+            color: aliceblue;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .CloseButton:hover {
+            transform: scale(1.1);
+        }
+
+    </style>
+    <script>
+        function AddStudent() {
+            document.getElementById("addStudentDialog").showModal();
+        }
+
+        function addStudent() {
+            let name = document.getElementById("name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let address = document.getElementById("address").value.trim();
+
+            if (!name || !email || !phone || !address) {
+                alert("Không để trống thông tin!");
+                return;
+            }
+
+            let student = { name, email, phone, address };
+
+            fetch("/student/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(student)
+            })
+            .then(data => {
+                alert("Thêm thành công!");
+                document.getElementById("addStudentDialog").close();
+                location.reload();
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+        }
+
+        function closeDialog() {
+            document.getElementById("addStudentDialog").close();
+        }
+
+    </script>
+</head>
+<body style="background-color: azure;">
+
+<table class="table">
+    <colgroup>
+        <col style="width: 5%;">
+        <col style="width: 20%;">
+        <col style="width: 20%;">
+        <col style="width: 15%;">
+        <col style="width: 35%;">
+        <col style="width: 5%;">
+    </colgroup>
+    <tr>
+        <td colspan="6" style="background-color: aqua; height: 50px; ">
+            <samp style="color: blue; text-align: center; font-size: 50px;"> STUDENT MANAGEMENT</samp>
+            <button class="add-student-btn" onclick="AddStudent()" > ADD STUDENT </button>
+            <button class="delete-student-btn" onclick="DeleteStudent()">DELETE</button>
+            <button class="set-student-btn">SET</button>
+        </td>
+    </tr>
+    <tr>
+        <th class="th1">STT</th>
+        <th class="th1">Name</th>
+        <th class="th1">Email</th>
+        <th class="th1">Phone</th>
+        <th class="th1">Address</th>
+        <th class="th1">Select</th>
+    </tr>
+    <tbody>
+    <tr th:each="student, iterStar : ${students}">
+        <td th:text="${iterStar.index+1}"></td>
+        <td th:text="${student.name}"></td>
+        <td th:text="${student.email}"></td>
+        <td th:text="${student.phone}"></td>
+        <td th:text="${student.address}"></td>
+        <td style="text-align: center;"><input type="radio" name="set"></td>
+    </tr>
+    </tbody>
+</table>
+<dialog id="addStudentDialog">
+    <div>
+        <h2>ADD STUDENT</h2>
+        <table class="tableAdd">
+            <tr><td>Name <input class="inputAdd" type="text" id="name" required></td></tr>
+            <tr><td>Email <input class="inputAdd" type="email" id="email" required></td></tr>
+            <tr><td>Phone <input class="inputAdd" type="text" id="phone" required></td></tr>
+            <tr><td>Address <input class="inputAdd" type="text" id="address" required></td></tr>
+            <tr><td><button class="addButton" onclick="addStudent()">Add</button>
+                <button class="CloseButton" onclick="closeDialog()">Close</button></td></tr>
+        </table>
+    </div>
+</dialog>
+
+</body>
+</html>
