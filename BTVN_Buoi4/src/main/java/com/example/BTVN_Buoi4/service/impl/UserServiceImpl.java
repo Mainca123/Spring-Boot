@@ -26,6 +26,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findUserByName(String name) {
+        List<User> users = userRepository.findAll();
+        users.removeIf(user -> !user.getName().toLowerCase().contains(name.toLowerCase()));
+        return users;
+    }
+
+    @Override
     public void addUser(User user) {
         userRepository.saveAndFlush(user);
     }

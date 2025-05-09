@@ -19,8 +19,9 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/getAllUsers")
-    public List<User> getAllUser(){
-       return userService.findAllUser();
+    public ResponseEntity<List<User>> getAllUser(){
+        List<User> users = userService.findAllUser();
+       return ResponseEntity.status(HttpStatus.ACCEPTED).body(users);
     }
 
     @GetMapping("/getUserByID")
@@ -29,7 +30,13 @@ public class UserController {
         if(user != null)
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
         else
-         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(user);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(user);
+    }
+
+    @GetMapping("/getUsersByName")
+    public ResponseEntity<List<User>> getUserByName(@RequestBody String name) {
+        List<User> users = userService.findUserByName(name);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(users);
     }
 
     @PostMapping("/createUser")
